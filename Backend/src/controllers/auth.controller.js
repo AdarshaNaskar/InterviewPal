@@ -133,17 +133,39 @@ async function logout(req, res) {
  * @access private
  */
 async function getMe(req, res) {
-  const user = await userModel.findById(req.user.id);
+  try {
+    const userId = req.user?.id || req.user?._id;
 
-  res.status(200).json({
-    message: "User details fetched successfully",
-    user: {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-    },
-  });
+    if (!userId) {
+      return res.status(401).json({
+        message: "Invalid token payload",
+      });
+    }
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(401).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "User details fetched successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("GET ME ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to fetch user details",
+    });
+  }
 }
+
 
 module.exports = {
   register,

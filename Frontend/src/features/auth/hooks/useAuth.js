@@ -55,18 +55,28 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    const getAndSetUser = async () => {
-      try {
-        const data = await getMe();
-        setuser(data.user);
-      } catch (err) {
-      } finally {
-        setloading(false);
-      }
-    };
+  const getAndSetUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setloading(false);
+      return;
+    }
 
-    getAndSetUser();
-  }, []);
+    try {
+      const data = await getMe();
+      if (data?.user) {
+        setuser(data.user);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  getAndSetUser();
+}, []);
+
 
   return { user, loading, handleRegister, handleLogin, handleLogout };
 };
