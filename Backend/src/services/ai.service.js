@@ -94,10 +94,11 @@ const interviewReportSchema = {
       },
     },
 
-    title:{
-      type:"string",
-      description:"The title of the job for which the interview report is generated"
-    }
+    title: {
+      type: "string",
+      description:
+        "The title of the job for which the interview report is generated",
+    },
   },
 
   required: [
@@ -106,7 +107,7 @@ const interviewReportSchema = {
     "behavioralQuestions",
     "skillGaps",
     "preparationPlan",
-    "title"
+    "title",
   ],
 };
 
@@ -137,7 +138,7 @@ async function generateInterviewReport({
                     `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
+    model: "gemini-3.1-flash-lite",
     contents: prompt,
     config: {
       responseMimeType: "application/json",
