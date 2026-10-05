@@ -1,15 +1,19 @@
 @use "./styles/button.scss";
-* {
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html,
-body,
-#root {
+body {
   width: 100%;
-  background-color: rgb(31, 31, 31);
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: #111316;
   color: whitesmoke;
   font-family:
     system-ui,
@@ -23,6 +27,13 @@ body,
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .highlight {
