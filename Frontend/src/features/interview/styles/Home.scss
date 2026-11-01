@@ -16,6 +16,7 @@ $radius-btn: 8px;
 
 // ─── Page Layout ────────────────────────────────────────────────────────────
 .home {
+  position: relative;
   width: 100%;
   min-height: 100vh;
   background-color: $bg-page;
@@ -533,7 +534,7 @@ $radius-btn: 8px;
 }
 
 .home__user-nav {
-  position: fixed;
+  position: absolute;
   top: 24px;
   left: 24px;
   display: block;
@@ -662,9 +663,5 @@ $radius-btn: 8px;
 
   .home__header {
     margin-top: 25px;
-  }
-
-  .home__header-icon {
-    flex-shrink: 0;
   }
 }
