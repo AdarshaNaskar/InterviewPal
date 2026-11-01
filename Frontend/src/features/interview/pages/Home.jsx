@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import "../styles/Home.scss";
 import { useInterview } from "../hook/useInterview";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 // ─── Sub-components (UI Layer) ────────────────────────────────────────────────
 
@@ -29,6 +30,60 @@ const PageHeader = () => (
     </div>
   </div>
 );
+
+const UserNavigation = ({ username, onLogout }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="home__user-nav">
+      <button
+        type="button"
+        className="home__hamburger"
+        aria-label="Open user menu"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      {isOpen && (
+        <>
+          <button
+            className="home__menu-backdrop"
+            aria-label="Close menu"
+            onClick={() => setIsOpen(false)}
+          />
+
+          <div className="home__user-menu">
+            <div className="home__user-info">
+              <div className="home__user-avatar">
+                {username?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+
+              <div>
+                <p className="home__user-label">Logged in as</p>
+                <p className="home__username">{username || "User"}</p>
+              </div>
+            </div>
+
+            <div className="home__menu-divider" />
+
+            <button
+              type="button"
+              className="home__logout-btn"
+              onClick={onLogout}
+            >
+              <span>↪</span>
+              Logout
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 const JobDescriptionCard = ({ value, onChange }) => (
   <div className="home__card home__card--left">
@@ -78,80 +133,135 @@ const JobDescriptionCard = ({ value, onChange }) => (
   </div>
 );
 
-const ResumeUploadCard = ({ resumeInputRef, selectedFile, onFileChange }) => (
-  <div className="home__card home__card--resume">
-    <div className="home__card-header">
-      <div className="home__card-icon home__card-icon--red">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
-            fill="rgba(210,13,61,0.15)"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M14 2V8H20"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M12 11V17M9 14L12 11L15 14"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+const ResumeUploadCard = ({ resumeInputRef, selectedFile, onFileChange }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+
+    const file = event.dataTransfer.files?.[0];
+
+    if (file) {
+      onFileChange(file);
+    }
+  };
+
+  return (
+    <div className="home__card home__card--resume">
+      <div className="home__card-header">
+        <div className="home__card-icon home__card-icon--red">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
+              fill="rgba(210,13,61,0.15)"
+              stroke="#d20d3d"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M14 2V8H20"
+              stroke="#d20d3d"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M12 11V17M9 14L12 11L15 14"
+              stroke="#d20d3d"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div>
+          <h2 className="home__card-title">Resume</h2>
+          <p className="home__card-subtitle">
+            Upload your latest resume (PDF, DOC, DOCX).
+          </p>
+        </div>
       </div>
-      <div>
-        <h2 className="home__card-title">Resume</h2>
-        <p className="home__card-subtitle">
-          Upload your latest resume (PDF, DOC, DOCX).
+
+      <div
+        className={`home__dropzone ${
+          isDragging ? "home__dropzone--dragging" : ""
+        }`}
+        onDragEnter={(event) => {
+          event.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragOver={(event) => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "copy";
+          setIsDragging(true);
+        }}
+        onDragLeave={(event) => {
+          event.preventDefault();
+
+          if (
+            !event.relatedTarget ||
+            !event.currentTarget.contains(event.relatedTarget)
+          ) {
+            setIsDragging(false);
+          }
+        }}
+        onDrop={handleDrop}
+      >
+        <div className="home__dropzone-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 16V17C4 18.66 7.58 20 12 20C16.42 20 20 18.66 20 17V16"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M12 4V14M9 7L12 4L15 7"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+
+        <p className="home__dropzone-text">
+          {isDragging
+            ? "Drop your resume here"
+            : selectedFile
+              ? `Selected: ${selectedFile.name}`
+              : "Drag and drop your resume here"}
         </p>
+
+        <span className="home__dropzone-or">or</span>
+
+        <label htmlFor="resume" className="home__upload-btn">
+          {selectedFile ? "Change resume" : "Upload resume"}
+        </label>
+
+        <input
+          ref={resumeInputRef}
+          hidden
+          type="file"
+          name="resume"
+          id="resume"
+          accept=".pdf,.doc,.docx"
+          onChange={onFileChange}
+        />
+
+        <span className="home__dropzone-hint">PDF, DOC, DOCX (Max 3MB)</span>
       </div>
     </div>
-
-    <div className="home__dropzone">
-      <div className="home__dropzone-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M4 16V17C4 18.66 7.58 20 12 20C16.42 20 20 18.66 20 17V16"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M12 4V14M9 7L12 4L15 7"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      <p className="home__dropzone-text">
-        {selectedFile ? `Selected: ${selectedFile.name}` : "Drag and drop your resume here"}
-      </p>
-      <span className="home__dropzone-or">or</span>
-
-      <label htmlFor="resume" className="home__upload-btn">
-        {selectedFile ? "Change resume" : "Upload resume"}
-      </label>
-      <input
-        ref={resumeInputRef}
-        hidden
-        type="file"
-        name="resume"
-        id="resume"
-        accept=".pdf,.doc,.docx"
-        onChange={onFileChange}
-      />
-
-      <span className="home__dropzone-hint">PDF, DOC, DOCX (Max 3MB)</span>
-    </div>
-  </div>
-);
+  );
+};
 
 const SelfDescriptionCard = ({ value, onChange }) => (
   <div className="home__card home__card--self">
@@ -196,7 +306,12 @@ const SelfDescriptionCard = ({ value, onChange }) => (
 );
 
 const GenerateButton = ({ onClick, disabled }) => (
-  <button onClick={onClick} className="home__generate-btn" type="button" disabled={disabled}>
+  <button
+    onClick={onClick}
+    className="home__generate-btn"
+    type="button"
+    disabled={disabled}
+  >
     {disabled ? "Generating..." : "Generate Preparation Report"}
     <span className="home__generate-btn-arrow">{"→"}</span>
   </button>
@@ -205,11 +320,13 @@ const GenerateButton = ({ onClick, disabled }) => (
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 const Home = () => {
+  const { user, handleLogout } = useAuth();
+
   const { loading, reportsLoading, generateReport, reports } = useInterview();
   const resumeInputRef = useRef();
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   // Restore draft state from sessionStorage if mobile browser reloads on file picker
   const [jobDescription, setJobDescription] = useState(() => {
     return sessionStorage.getItem("draft_job_description") || "";
@@ -232,17 +349,50 @@ const Home = () => {
     if (errorMessage) setErrorMessage("");
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 3 * 1024 * 1024) {
-        setErrorMessage("File size exceeds 3MB limit. Please upload a smaller file.");
-        e.target.value = "";
-        setSelectedFile(null);
-        return;
+  const handleUserLogout = async () => {
+    await handleLogout();
+    navigate("/login");
+  };
+
+  const handleFileChange = (input) => {
+    const isInputEvent = Boolean(input?.target?.files);
+    const file = isInputEvent ? input.target.files?.[0] : input;
+
+    if (!file) return;
+
+    const allowedExtensions = /\.(pdf|doc|docx)$/i;
+
+    if (!allowedExtensions.test(file.name)) {
+      setErrorMessage("Please upload a PDF, DOC, or DOCX file.");
+
+      setSelectedFile(null);
+
+      if (isInputEvent) {
+        input.target.value = "";
       }
-      setSelectedFile(file);
-      if (errorMessage) setErrorMessage("");
+
+      return;
+    }
+
+    if (file.size > 3 * 1024 * 1024) {
+      setErrorMessage(
+        "File size exceeds 3MB limit. Please upload a smaller file.",
+      );
+
+      setSelectedFile(null);
+
+      if (isInputEvent) {
+        input.target.value = "";
+      }
+
+      return;
+    }
+
+    setSelectedFile(file);
+    setErrorMessage("");
+
+    if (!isInputEvent && resumeInputRef.current) {
+      resumeInputRef.current.value = "";
     }
   };
 
@@ -275,7 +425,9 @@ const Home = () => {
       sessionStorage.removeItem("draft_self_description");
       navigate(`/interview/${result.data._id}`);
     } else {
-      setErrorMessage(result.error || "Failed to generate report. Please try again.");
+      setErrorMessage(
+        result.error || "Failed to generate report. Please try again.",
+      );
     }
   };
 
@@ -299,6 +451,8 @@ const Home = () => {
 
   return (
     <main className="home">
+      <UserNavigation username={user?.username} onLogout={handleUserLogout} />
+
       <div className="home__container">
         <PageHeader />
 
