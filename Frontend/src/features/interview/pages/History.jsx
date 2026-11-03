@@ -6,6 +6,10 @@ import { useInterview } from "../hook/useInterview";
 import "../styles/Home.scss";
 import "../styles/History.scss";
 
+import Logout from "../../../assets/log-out.svg";
+import Home from "../../../assets/house.svg";
+import Search from "../../../assets/search.svg";
+
 const UserNavigation = ({ username, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -53,7 +57,7 @@ const UserNavigation = ({ username, onLogout }) => {
                 navigate("/");
               }}
             >
-              <span>⌂</span>
+              <img src={Home} alt="home-icon" className="icon" />
               Home
             </button>
 
@@ -62,7 +66,7 @@ const UserNavigation = ({ username, onLogout }) => {
               className="home__logout-btn"
               onClick={onLogout}
             >
-              <span>↪</span>
+              <img src={Logout} alt="logout-icon" className="icon" />
               Logout
             </button>
           </div>
@@ -115,7 +119,7 @@ const History = () => {
         <section className="history__content">
           <div className="history__toolbar">
             <div className="history__search">
-              <span>⌕</span>
+              <img src={Search} alt="search-icon" className="icon" />
               <input
                 type="text"
                 placeholder="Search by job title..."

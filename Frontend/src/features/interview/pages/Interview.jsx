@@ -171,9 +171,9 @@ const SCORE_TIER = (score) => {
 };
 
 const TIER_COLORS = {
-  green:  { from: "#4ade80", to: "#16a34a" },
+  green: { from: "#4ade80", to: "#16a34a" },
   yellow: { from: "#fde047", to: "#ca8a04" },
-  red:    { from: "#ff4d6d", to: "#d20d3d" },
+  red: { from: "#ff4d6d", to: "#d20d3d" },
 };
 
 const ScoreRing = ({ score }) => {
@@ -189,18 +189,22 @@ const ScoreRing = ({ score }) => {
       <svg className="iv-score__ring" viewBox="0 0 120 120">
         <defs>
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"   stopColor={from} />
-            <stop offset="100%" stopColor={to}   />
+            <stop offset="0%" stopColor={from} />
+            <stop offset="100%" stopColor={to} />
           </linearGradient>
         </defs>
         <circle
           className="iv-score__track"
-          cx="60" cy="60" r={radius}
+          cx="60"
+          cy="60"
+          r={radius}
           strokeWidth="9"
         />
         <circle
           className="iv-score__fill"
-          cx="60" cy="60" r={radius}
+          cx="60"
+          cy="60"
+          r={radius}
           strokeWidth="9"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -264,7 +268,9 @@ const Interview = () => {
         </div>
         <p className="loading-screen__text">Loading interview report…</p>
         <div className="loading-screen__dots">
-          <span /><span /><span />
+          <span />
+          <span />
+          <span />
         </div>
       </main>
     );

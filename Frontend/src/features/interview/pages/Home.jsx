@@ -4,19 +4,25 @@ import { useInterview } from "../hook/useInterview";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth";
 
+import FileText from "../../../assets/file-text.svg";
+import FileUP from "../../../assets/file-up.svg";
+import User from "../../../assets/user-round.svg";
+import History from "../../../assets/rotate-ccw-clock.svg";
+import Upload from "../../../assets/arrow-up-from-line.svg";
+import Logout from "../../../assets/log-out.svg";
+import Sparkle from "../../../assets/sparkles.svg";
+
 // ─── Sub-components (UI Layer) ────────────────────────────────────────────────
 
 const PageHeader = () => (
   <div className="home__header">
     <div className="home__header-icon">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5L12 2Z"
-          fill="white"
-          stroke="white"
-          strokeWidth="0.5"
-        />
-      </svg>
+      <img
+        src={Sparkle}
+        alt="sparkle-icon"
+        className="icon"
+        style={{ height: "30px", width: "30px" }}
+      />
     </div>
     <div className="home__header-text">
       <h1>
@@ -78,7 +84,8 @@ const UserNavigation = ({ username, onLogout, onHistory }) => {
                 onHistory();
               }}
             >
-              <span>▤</span>History
+              <img src={History} alt="history" className="icon" />
+              History
             </button>
 
             <button
@@ -86,7 +93,7 @@ const UserNavigation = ({ username, onLogout, onHistory }) => {
               className="home__logout-btn"
               onClick={onLogout}
             >
-              <span>↪</span>
+              <img src={Logout} alt="logout-icon" className="icon" />
               Logout
             </button>
           </div>
@@ -100,26 +107,7 @@ const JobDescriptionCard = ({ value, onChange }) => (
   <div className="home__card home__card--left">
     <div className="home__card-header">
       <div className="home__card-icon home__card-icon--red">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
-            fill="rgba(210,13,61,0.15)"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M14 2V8H20"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M8 13H16M8 17H13"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img src={FileText} alt="filetext" className="icon" />
       </div>
       <div>
         <h2 className="home__card-title">Job Description</h2>
@@ -162,31 +150,7 @@ const ResumeUploadCard = ({ resumeInputRef, selectedFile, onFileChange }) => {
     <div className="home__card home__card--resume">
       <div className="home__card-header">
         <div className="home__card-icon home__card-icon--red">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
-              fill="rgba(210,13,61,0.15)"
-              stroke="#d20d3d"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M14 2V8H20"
-              stroke="#d20d3d"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M12 11V17M9 14L12 11L15 14"
-              stroke="#d20d3d"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <img src={FileUP} alt="file-up" className="icon" />
         </div>
 
         <div>
@@ -223,25 +187,12 @@ const ResumeUploadCard = ({ resumeInputRef, selectedFile, onFileChange }) => {
         onDrop={handleDrop}
       >
         <div className="home__dropzone-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 16V17C4 18.66 7.58 20 12 20C16.42 20 20 18.66 20 17V16"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M12 4V14M9 7L12 4L15 7"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <img
+            src={Upload}
+            alt="upload"
+            className="icon"
+            style={{ width: "35px", height: "35px" }}
+          />
         </div>
 
         <p className="home__dropzone-text">
@@ -278,22 +229,7 @@ const SelfDescriptionCard = ({ value, onChange }) => (
   <div className="home__card home__card--self">
     <div className="home__card-header">
       <div className="home__card-icon home__card-icon--red">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle
-            cx="12"
-            cy="8"
-            r="4"
-            fill="rgba(210,13,61,0.15)"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M4 20C4 17.24 7.58 15 12 15C16.42 15 20 17.24 20 20"
-            stroke="#d20d3d"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img src={User} alt="user-icon" className="icon" />
       </div>
       <div>
         <h2 className="home__card-title">Self Description</h2>
