@@ -31,7 +31,7 @@ const PageHeader = () => (
   </div>
 );
 
-const UserNavigation = ({ username, onLogout }) => {
+const UserNavigation = ({ username, onLogout, onHistory }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -69,6 +69,17 @@ const UserNavigation = ({ username, onLogout }) => {
             </div>
 
             <div className="home__menu-divider" />
+
+            <button
+              type="button"
+              className="home__logout-btn"
+              onClick={() => {
+                setIsOpen(false);
+                onHistory();
+              }}
+            >
+              <span>▤</span>History
+            </button>
 
             <button
               type="button"
@@ -451,7 +462,11 @@ const Home = () => {
 
   return (
     <main className="home">
-      <UserNavigation username={user?.username} onLogout={handleUserLogout} />
+      <UserNavigation
+        username={user?.username}
+        onLogout={handleUserLogout}
+        onHistory={() => navigate("/history")}
+      />
 
       <div className="home__container">
         <PageHeader />
@@ -501,24 +516,31 @@ const Home = () => {
               <p className="report-list--loading">Loading recent reports…</p>
             ) : (
               <ul className="report-list">
-                {reports.map((report) => (
-                  <li
-                    key={report._id}
-                    className="report-item"
-                    onClick={() => navigate(`/interview/${report._id}`)}
-                  >
-                    <h3>{report.title || "Untitled Position"}</h3>
-                    <p className="report-meta">
-                      Generated on{" "}
-                      {new Date(report.createdAt).toLocaleDateString()}
-                    </p>
-                    <p
-                      className={`match-score ${report.matchScore >= 80 ? `score--high` : report.matchScore >= 60 ? `score--medium` : `score--low`}`}
+                {[...reports]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime(),
+                  )
+                  .slice(0, 5)
+                  .map((report) => (
+                    <li
+                      key={report._id}
+                      className="report-item"
+                      onClick={() => navigate(`/interview/${report._id}`)}
                     >
-                      Match Score: {report.matchScore}%
-                    </p>
-                  </li>
-                ))}
+                      <h3>{report.title || "Untitled Position"}</h3>
+                      <p className="report-meta">
+                        Generated on{" "}
+                        {new Date(report.createdAt).toLocaleDateString()}
+                      </p>
+                      <p
+                        className={`match-score ${report.matchScore >= 80 ? `score--high` : report.matchScore >= 60 ? `score--medium` : `score--low`}`}
+                      >
+                        Match Score: {report.matchScore}%
+                      </p>
+                    </li>
+                  ))}
               </ul>
             )}
           </section>

@@ -1,0 +1,266 @@
+.history-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #111316;
+  color: #f0f0f0;
+  padding: 5rem 1.5rem 3rem;
+}
+
+.history__container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.history__header {
+  margin-bottom: 2.5rem;
+
+  .history__eyebrow {
+    color: #d20d3d;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  p:last-child {
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+  }
+}
+
+.history__content {
+  width: 100%;
+}
+
+.history__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.history__search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  background: #1a1d22;
+  border: 1px solid #2e3239;
+  border-radius: 8px;
+  padding: 0 1rem;
+  height: 48px;
+
+  span {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.5rem;
+  }
+
+  input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  &:focus-within {
+    border-color: #d20d3d;
+  }
+}
+
+.history__sort {
+  height: 48px;
+  padding: 0 0.9rem;
+  background: #1a1d22;
+  border: 1px solid #2e3239;
+  border-radius: 8px;
+  color: #f0f0f0;
+  outline: none;
+  cursor: pointer;
+
+  option {
+    background: #1a1d22;
+    color: #f0f0f0;
+  }
+
+  &:focus {
+    border-color: #d20d3d;
+  }
+}
+
+.history__results {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.history__report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.history__report-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: #1a1d22;
+  border: 1px solid #2e3239;
+  border-radius: 9px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    background: #202329;
+    border-color: #d20d3d;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #d20d3d;
+    outline-offset: 3px;
+  }
+}
+
+.history__report-info {
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+  }
+}
+
+.history__report-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+
+  span {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  small {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.7rem;
+  }
+}
+
+.history__report-arrow {
+  color: #d20d3d;
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+}
+
+.score--high {
+  color: #35c979;
+}
+
+.score--medium {
+  color: #e9b949;
+}
+
+.score--low {
+  color: #ff4d6d;
+}
+
+.history__empty,
+.history__message {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: #1a1d22;
+  border: 1px solid #2e3239;
+  border-radius: 10px;
+}
+
+.history__empty-icon {
+  color: #d20d3d;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.history__empty h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.history__empty p,
+.history__message {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.history__empty button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: #d20d3d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #ed174d;
+  }
+}
+
+@media (max-width: 600px) {
+  .history-page {
+    padding: 4.5rem 1rem 2rem;
+  }
+
+  .history__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .history__sort {
+    width: 100%;
+  }
+
+  .history__report-card {
+    padding: 1rem;
+    gap: 0.6rem;
+  }
+
+  .history__report-info h2 {
+    font-size: 0.9rem;
+  }
+
+  .history__report-score span {
+    font-size: 1rem;
+  }
+
+  .history__report-arrow {
+    margin-left: 0;
+  }
+}
