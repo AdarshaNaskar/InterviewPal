@@ -256,7 +256,7 @@ const Interview = () => {
     if (interviewId) {
       getReportById(interviewId);
     }
-  }, [interviewId]);
+  }, [interviewId, getReportById]);
 
   if (loading || !report) {
     return (

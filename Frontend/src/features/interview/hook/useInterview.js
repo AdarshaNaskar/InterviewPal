@@ -5,7 +5,7 @@ import {
   generateInterviewReport,
   getInterviewReportById,
 } from "../services/inerview.api";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { InterviewContext } from "../interview.context";
 import { useParams } from "react-router";
 
@@ -47,7 +47,7 @@ export const useInterview = () => {
     }
   };
 
-  const getReportById = async (interviewId) => {
+  const getReportById = useCallback(async (interviewId) => {
     setLoading(true);
     try {
       const response = await getInterviewReportById(interviewId);
@@ -59,7 +59,7 @@ export const useInterview = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const getReports = async () => {
     setReportsLoading(true);
