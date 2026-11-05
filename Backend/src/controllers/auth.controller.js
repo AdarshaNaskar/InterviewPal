@@ -2,6 +2,8 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenBlacklistModel = require("../models/balcklist.model");
+const crypto = require("crypto");
+const { sendPasswordResetEmail } = require("../services/email.service");
 
 /**
  * @name register
@@ -166,10 +168,133 @@ async function getMe(req, res) {
   }
 }
 
+/**
+ * @name forgotPassword
+ * @description Send a secure password reset link
+ * @access Public
+ */
+
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email || typeof email !== "string") {
+      return res.status(400).json({
+        message: "Please provide your email address.",
+      });
+    }
+    const user = await userModel.findOne({ email: email.trim() });
+
+    if (!user) {
+      return res.status(200).json({
+        message: "A reset link has been sent to the email.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+
+    const frontendURL = process.env.FRONTEND_URL;
+
+    if (!frontendURL) {
+      throw new Error("FRONTEND_URL is not configured.");
+    }
+
+    const resetURL = `${frontendURL.replace(/\/$/, "")}/reset-password/${resetToken}`;
+
+    try {
+      await sendPasswordResetEmail(user.email, resetURL);
+    } catch (emailError) {
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
+      await user.save();
+
+      throw emailError;
+    }
+
+    return res.status(200).json({
+      message: "A reset link has been sent to the email.",
+    });
+  } catch (error) {
+    console.error("FORGOT PASSWORD ERROR:", error);
+
+    return res.status(500).json({
+      message: "Unable to process your request. Please try again later.",
+    });
+  }
+}
+
+/**
+ * @name resetPassword
+ * @description Reset user password using a valid reset token
+ * @access Public
+ */
+async function resetPassword(req, res) {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!token || typeof password != "string" || !password) {
+      return res.status(400).json({
+        message: "Reset token and new password are required.",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters.",
+      });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    //Find user with vaid, unexpired reset token
+    const user = await userModel.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired password reset link.",
+      });
+    }
+
+    // Hash the new password
+    user.password = await bcrypt.hash(password, 10);
+
+    // Invalidate the reset token
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password updated successfully.",
+    });
+  } catch (error) {
+    console.error("RESET PASSWORD ERROR:", error);
+
+    return res.status(500).json({
+      message: "Unable to reset password. Please try again later.",
+    });
+  }
+}
 
 module.exports = {
   register,
   login,
   logout,
   getMe,
+  forgotPassword,
+  resetPassword,
 };

@@ -9,11 +9,19 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: [true, "Account already exits with this email"],
-    require: true,
+    required: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
+  },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
   },
 });
 

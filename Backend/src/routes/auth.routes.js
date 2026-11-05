@@ -28,8 +28,22 @@ authRouter.get("/logout", authController.logout);
 /**
  * @route GET/api/auth/get-me
  * @description get the current logged in user detils
- * @access private
+ * @access Private
  */
 authRouter.get("/get-me", authMiddleware.authUser, authController.getMe);
+
+/**
+ * @route POST /api/auth/forgot-password
+ * @description Request a password reset link
+ * @access Public
+ */
+authRouter.post("/forgot-password", authController.forgotPassword);
+
+/**
+ * @route POST /api/auth/reset-password/:token
+ * @description Reset password using rest token
+ * @access Public
+ */
+authRouter.post("/reset-password/:token", authController.resetPassword);
 
 module.exports = authRouter;
